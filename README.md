@@ -139,22 +139,22 @@ curl -X POST http://localhost:5074/api/ActivityMembers \
 # Delete relationship
 curl -X DELETE http://localhost:5074/api/ActivityMembers/1/1
 
+```
 
 
-
-### **Model **  
+### Model  
 - Stores detailed member profiles, including roles and health considerations.  
 - Manages activities with validation and member assignments.  
 
-### **View **  
+### View 
 - Designed with Bootstrap for a clean, intuitive experience.  
 - Uses modal dialogs and structured cards for better data presentation.  
 - Smooth navigation between itinerary sections.  
 
-### **Controller **  
+### Controller   
 - Handles member and activity management with secure endpoints.  
 - Requires authentication and role-based access control.  
 - Implements error handling for reliable form submissions.  
 
-## 📖 Additional Features  
+### Additional Features  
 - Member Management, assigning roles and managing relationship between members
