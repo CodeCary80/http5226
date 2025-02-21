@@ -1,0 +1,69 @@
+@model passionproject.Models.ViewModels.DestinationViewModel
+
+@{
+    ViewData["Title"] = "Create Destination";
+}
+
+<h1>Create New Destination</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Location" class="control-label"></label>
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="StartDate" class="control-label">Start Date</label>
+                <input asp-for="StartDate" class="form-control" type="date" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="EndDate" class="control-label">End Date</label>
+                <input asp-for="EndDate" class="form-control" type="date" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Budget" class="control-label"></label>
+                <input asp-for="Budget" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="Budget" class="text-danger"></span>
+            </div>
+
+            <div class="card mb-3">
+                    <div class="card-body">
+                        <h5>Initial Members</h5>
+                        <select name="initialMembers" multiple class="form-select">
+                            @foreach (var member in ViewBag.AllMembers)
+                            {
+                                <option value="@member.MemberId">@member.Name</option>
+                            }
+                        </select>
+                        <div class="mt-2">
+                            <a asp-action="CreateMember" class="btn btn-sm btn-success">Create New Member</a>
+                        </div>
+                    </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,63 @@
+@using passionproject.Models.ViewModels
+@model DestinationViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="btn-group mb-3">
+        <a asp-action="Edit" asp-route-id="@Model.DestinationId" class="btn btn-primary">Edit Destination</a>
+        <a asp-action="CreateActivity" asp-route-destinationId="@Model.DestinationId" class="btn btn-success">Add New Activity</a>
+    </div>
+}
+
+<div class="container">
+    <h1 class="mb-4">@Model.Name</h1>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Details</h5>
+                    <p><strong>Location:</strong> @Model.Location</p>
+                    <p><strong>Dates:</strong> @Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString()</p>
+                    <p><strong>Budget:</strong> $@Model.Budget</p>
+                    <p>@Model.Description</p>
+                </div>
+            </div>
+
+            @foreach (var activity in Model.Activities)
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">@activity.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@activity.DateTime.ToString("g")</h6>
+                        <p class="card-text">@activity.Description</p>
+                        <p><strong>Location:</strong> @activity.Location</p>
+                        <p><strong>Cost:</strong> $@activity.Cost</p>
+                        <div class="mb-2">
+                            <strong>Members:</strong>
+                            @if (activity.Members != null && activity.Members.Any())
+                            {
+                                <span class="ms-2">
+                                    @string.Join(", ", activity.Members.Select(m => m.Name))
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted ms-2">No members yet</span>
+                            }
+                        </div>
+                        <div class="btn-group">
+                            <a asp-action="ActivityDetails" asp-route-id="@activity.ActivityId" 
+                               class="btn btn-primary btn-sm">View Details</a>
+                            <a asp-action="EditActivity" asp-route-id="@activity.ActivityId" 
+                               class="btn btn-warning btn-sm">Edit</a>
+                            <a asp-action="DeleteActivity" asp-route-id="@activity.ActivityId" 
+                               class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

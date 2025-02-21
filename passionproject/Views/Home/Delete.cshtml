@@ -1,0 +1,29 @@
+@model passionproject.Models.ViewModels.DestinationViewModel
+
+@{
+    ViewData["Title"] = "Delete Destination";
+}
+
+<h1>Delete Destination</h1>
+
+<div class="alert alert-danger">
+    <h3>Are you sure you want to delete this destination?</h3>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <h6 class="card-subtitle mb-2 text-muted">@Model.Location</h6>
+        <p class="card-text">
+            <strong>Dates:</strong> @Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString()
+        </p>
+        <p class="card-text">@Model.Description</p>
+        <p class="card-text"><strong>Budget:</strong> $@Model.Budget</p>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="DestinationId" />
+            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </form>
+    </div>
+</div>

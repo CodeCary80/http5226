@@ -1,0 +1,57 @@
+﻿@using passionproject.Models.ViewModels
+@model List<DestinationViewModel>
+    
+@{
+    ViewData["Title"] = "Destinations";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Your Destinations</h1>
+</div>
+<div class="row">
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-success">Add New Destination</a>
+    </div>
+
+    @foreach (var destination in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@destination.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@destination.Location</h6>
+                    <p class="card-text">
+                        <strong>Dates:</strong> @destination.StartDate.ToShortDateString() - @destination.EndDate.ToShortDateString()
+                    </p>
+                    <p class="card-text">@destination.Description</p>
+                    <p class="card-text"><strong>Budget:</strong> $@destination.Budget</p>
+                    <div class="mb-3">
+                    <strong>Members:</strong>
+                    @{
+                        var allMembers = destination.Activities
+                            .SelectMany(a => a.Members)
+                            .Select(m => m.Name)
+                            .Distinct()
+                            .ToList();
+                    }
+                    @if (allMembers.Any())
+                    {
+                        <span class="ms-2">
+                            @string.Join(", ", allMembers)
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="text-muted ms-2">No members yet</span>
+                    }
+                    </div>
+                    <div class="btn-group">
+                        <a asp-action="DestinationDetails" asp-route-id="@destination.DestinationId" class="btn btn-primary">View Details</a>
+                        <a asp-action="Edit" asp-route-id="@destination.DestinationId" class="btn btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@destination.DestinationId" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,7 +1,7 @@
 # Itinerary Management System
 
 ## Project Overview
-A Content Management System (CMS) designed to help organize and manage travel itineraries. The system allows users to create destinations, schedule activities, and manage member participations in various trips.
+The **Itinerary Management System** helps users organize travel plans by managing members, activities, and destinations. It ensures a seamless experience with enhanced **member management, activity organization, and security** while providing a user-friendly interface. 
 
 ## Database Structure
 - **Destinations**: Stores trip information (location, dates, budget)
@@ -138,3 +138,23 @@ curl -X POST http://localhost:5074/api/ActivityMembers \
 
 # Delete relationship
 curl -X DELETE http://localhost:5074/api/ActivityMembers/1/1
+
+
+
+
+### **Model **  
+- Stores detailed member profiles, including roles and health considerations.  
+- Manages activities with validation and member assignments.  
+
+### **View **  
+- Designed with Bootstrap for a clean, intuitive experience.  
+- Uses modal dialogs and structured cards for better data presentation.  
+- Smooth navigation between itinerary sections.  
+
+### **Controller **  
+- Handles member and activity management with secure endpoints.  
+- Requires authentication and role-based access control.  
+- Implements error handling for reliable form submissions.  
+
+## 📖 Additional Features  
+- Member Management, assigning roles and managing relationship between members

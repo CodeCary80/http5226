@@ -1,0 +1,210 @@
+@using passionproject.Models.ViewModels
+@model ActivityViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container">
+    <div class="row">
+        <!-- Activity Details -->
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">@Model.Name</h2>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <p><strong>Date & Time:</strong> @Model.DateTime.ToString("g")</p>
+                            <p><strong>Location:</strong> @Model.Location</p>
+                            <p><strong>Cost:</strong> $@Model.Cost</p>
+                            <p><strong>Description:</strong> @Model.Description</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Members -->
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Activity Members</h3>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                            Add Member
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Notes</th>
+                                    <th>Dietary Restrictions</th>
+                                    <th>Health Info</th>
+                                    <th>Emergency Contact</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var member in Model.Members)
+                                {
+                                    <tr>
+                                        <td>@member.Name</td>
+                                        <td>@member.Email</td>
+                                        <td>@(member.IsOrganizer ? "Organizer" : "Member")</td>
+                                        <td>@member.DietaryRestrictions</td>
+                                        <td>@member.HealthConsiderations</td>
+                                        <td>@member.EmergencyContact</td>
+                                        <td>@member.Notes</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-sm btn-warning" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#editMemberModal-@member.MemberId">
+                                                    Edit
+                                                </button>
+                                                <form asp-action="RemoveMember" method="post" style="display: inline;">
+                                                    <input type="hidden" name="activityId" value="@Model.ActivityId" />
+                                                    <input type="hidden" name="memberId" value="@member.MemberId" />
+                                                    <button type="submit" class="btn btn-sm btn-danger" 
+                                                            onclick="return confirm('Are you sure you want to remove this member?')">
+                                                        Remove
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a asp-action="DestinationDetails" asp-route-id="@(ViewBag.DestinationId)" class="btn btn-secondary">Back to Destination</a>
+    </div>
+</div>
+
+<!-- Add Member -->
+<div class="modal fade" id="addMemberModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Member to Activity</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="AddMember" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="activityId" value="@Model.ActivityId" />
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Select Member</label>
+                        <div class="d-flex gap-2">
+                            <select name="memberId" class="form-select" required>
+                                <option value="">Choose a member...</option>
+                                @foreach (var member in ViewBag.AvailableMembers)
+                                {
+                                    <option value="@member.MemberId">@member.Name</option>
+                                }
+                            </select>
+                            <button type="button" class="btn btn-success" 
+                                    onclick="location.href='@Url.Action("CreateMember", "Home")'">
+                                Create New Member
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="isOrganizer" name="isOrganizer">
+                            <label class="form-check-label" for="isOrganizer">Is Organizer</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Notes</label>
+                        <textarea name="notes" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Member -->
+@foreach (var member in Model.Members)
+{
+    <div class="modal fade" id="editMemberModal-@member.MemberId">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Member Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="EditMemberFull" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="activityId" value="@Model.ActivityId" />
+                    <input type="hidden" name="memberId" value="@member.MemberId" />
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" value="@member.Name" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" value="@member.Email" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Dietary Restrictions</label>
+                        <input type="text" name="dietaryRestrictions" class="form-control" value="@member.DietaryRestrictions" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Health Considerations</label>
+                        <input type="text" name="healthConsiderations" class="form-control" value="@member.HealthConsiderations" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Emergency Contact</label>
+                        <input type="text" name="emergencyContact" class="form-control" value="@member.EmergencyContact" />
+                    </div>
+
+                     <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" 
+                                       id="isOrganizer-@member.MemberId" 
+                                       name="isOrganizer" 
+                                       value="true" @(member.IsOrganizer ? "checked" : "")>
+                                <label class="form-check-label" for="isOrganizer-@member.MemberId">
+                                    Is Organizer
+                                </label>
+                            </div>
+                            <input type="hidden" name="isOrganizer" value="false" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Notes</label>
+                        <textarea name="notes" class="form-control">@member.Notes</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+}
